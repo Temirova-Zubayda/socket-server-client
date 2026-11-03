@@ -35,8 +35,6 @@ lets Pinky follow a nurse's ArUco marker while sending alarms to a laptop over a
 | [`clock.py`](clock.py) | Laptop B | Large millisecond clock for measuring stream delay |
 | [`webcam_yolo.py`](webcam_yolo.py) | Any laptop | Webcam + YOLO11n, shows detected persons |
 | [`fall_detect.py`](fall_detect.py) | Any laptop | Webcam + YOLO11n-pose, marks a person as `FALLEN` and shows an alarm |
-| [`hat_detect.py`](hat_detect.py) | Any laptop / Laptop B | Construction helmet detection + hat classification (helmet / cap / no_hat), also saves head crops |
-| [`train_hat.py`](train_hat.py) | Any laptop | Trains the hat classifier `hat_cls.pt` from the saved head crops |
 | [`pinky_follow.py`](pinky_follow.py) | Pinky | Marker following, YOLO search, fall detection, detour and socket alarms |
 | [`alarms.log`](alarms.log) | — | Example alarm log received from Pinky |
 | [`networking_demo_01/`](networking_demo_01) | — | Pinky hotspot version (`PC/`, `pinky/`) plus Wi-Fi guides and network diagram |
@@ -90,24 +88,7 @@ python3 webcam_yolo.py     # person detection
 python3 fall_detect.py     # fall detection (q to quit)
 ```
 
-### 4. Helmet detection and hat classification
-
-YOLO pose finds each person's head, then a small classifier labels it `helmet`, `cap` or `no_hat`.
-`no_hat` for 10 frames in a row shows a **NO HELMET** alarm.
-
-```bash
-python3 hat_detect.py                  # webcam
-python3 hat_detect.py 192.168.129.12   # Pinky RTSP stream
-```
-
-The classifier has to be trained on your own images first:
-
-1. Run `hat_detect.py`. While a person wears a helmet, press **1**; a cap, press **2**; no hat, press **3**.
-   Head crops are saved to `~/networking/dataset/hats/<class>/`. Aim for 100+ images per class, from different people, angles and lighting.
-2. Train: `python3 train_hat.py` (creates `hat_cls.pt`).
-3. Run `hat_detect.py` again; it loads `hat_cls.pt` automatically.
-
-### 5. Nurse following on Pinky
+### 4. Nurse following on Pinky
 
 Stop the RTSP server first, because only one program can use the camera. Then on Pinky:
 
